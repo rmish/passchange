@@ -86,7 +86,7 @@ class mainWindow(QMainWindow):
         inputLayout.addRow('Электронная почта', self.email)
         inputLayout.addRow('Место работы', self.office)
         inputLayout.addRow('Должность', self.post)
-        inputLayout.addRow('Пароль', self.password)
+        #inputLayout.addRow('Пароль', self.password)
         inputLayout.addRow('Учётная запись заблокирована',self.locked)
         inputLayout.addRow('Учётная запись выключена',self.disabled)
         inputLayout.addRow('Срок действия пароля истёк',self.expired)
