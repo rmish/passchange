@@ -230,21 +230,26 @@ class mainWindow(QMainWindow):
         return True
 
     def resetPassword(self):
-        # generate password
-        if self.config.value("ldap/passwordGenerator") == "apg" :
-            newPass = check_output(["/usr/bin/apg","-q","-n 1", 
-                    "-m 9","-x 12","-c cl_seed","-M NCL","-E l1IO0"], 
-                    universal_newlines=True).strip().split("/n")
-        elif self.config.value("ldap/passwordGenerator") == "wapg" :
-            newPass = check_output(["wapg.exe","-q","-n","1", 
-                    "-m","9","-x","12","-c","cl_seed","-M","NCL","-E","l1IO0"], 
-                    universal_newlines=True).strip().split("/n")
-        elif self.config.value("ldap/passwordGenerator") == "pwgen" :
-            newPass = check_output(["/usr/bin/pwgen","-B","-1","12","1"], 
-                    universal_newlines=True).strip().split("/n")
-        else : print ("Unknown password generator")
-        #print(newPass[0])
-        self.password.setText(newPass[0])
+        if self.password.text() == '':
+            # generate password
+            if self.config.value("ldap/passwordGenerator") == "apg" :
+                newPass = check_output(["/usr/bin/apg","-q","-n 1", 
+                        "-m 9","-x 12","-c cl_seed","-M NCL","-E l1IO0"], 
+                        universal_newlines=True).strip().split("/n")
+            elif self.config.value("ldap/passwordGenerator") == "wapg" :
+                newPass = check_output(["wapg.exe","-q","-n","1", 
+                        "-m","9","-x","12","-c","cl_seed","-M","NCL","-E","l1IO0"], 
+                        universal_newlines=True).strip().split("/n")
+            elif self.config.value("ldap/passwordGenerator") == "pwgen" :
+                newPass = check_output(["/usr/bin/pwgen","-B","-1","12","1"], 
+                        universal_newlines=True).strip().split("/n")
+            else : print ("Unknown password generator")
+            #print(newPass[0])
+            self.password.setText(newPass[0])
+        else:
+            if len(self.password.text())<3:
+                QMessageBox.information(self,"Некореектный пароль","Вы указали слишком короткий пароль")
+                return False
         try:
             self.c.resetPassword(self.dn, self.password.text())
             self.timer.start(901000)
