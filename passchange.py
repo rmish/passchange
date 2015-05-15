@@ -185,8 +185,14 @@ class mainWindow(QMainWindow):
         self.tabn.setText(found['postalCode'])
         self.fio.setText(found['name'])
         self.email.setText(found['mail'])
-        self.office.setText(found['department'])
-        self.post.setText(found['title'])
+        try:
+            self.office.setText(found['department'])
+        except KeyError:
+            print("Нет информации о месте работы")
+        try:
+            self.post.setText(found['title'])
+        except KeyError:
+            print("Нет информации о должности")
         self.dn = found['distinguishedName']
         self.account.setText(found['sAMAccountName'])
         if (int(found['userAccountControl']) & uac_locked) : self.locked.setChecked(True)
@@ -264,6 +270,7 @@ class mainWindow(QMainWindow):
         self.disabled.setChecked(False)
         self.expired.setChecked(False)
         self.dontExpired.setChecked(True)
+        print("Пароль изменён.")
         self.mailPassword()
         return True
 
@@ -304,6 +311,7 @@ class mainWindow(QMainWindow):
                 server = smtplib.SMTP(self.config.value("misc/mailServer"))
                 server.sendmail(sender, self.email.text(), mailBody.as_string())
                 server.quit()
+                print("Почта успешно отправлена на "+self.email.text())
                 return True
             except smtplib.SMTPRecipientsRefused as recipients:
                 print("Фигня с отправкой почты на "+mail)
