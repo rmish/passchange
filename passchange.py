@@ -184,7 +184,11 @@ class mainWindow(QMainWindow):
         # have user in "found" variable, filling all forms
         self.tabn.setText(found['postalCode'])
         self.fio.setText(found['name'])
-        self.email.setText(found['mail'])
+        try:
+            self.email.setText(found['mail'])
+        except KeyError:
+            print("Нет электронной почты")
+            QMessageBox.information(self,"Проблема","У пользователя неизвестная электронная почта. Без ручного ввода почты смена пароля и рассылка производится не будет.")
         try:
             self.office.setText(found['department'])
         except KeyError:
@@ -236,6 +240,9 @@ class mainWindow(QMainWindow):
         return True
 
     def resetPassword(self):
+        if len(self.email.text) < 6 :
+            print("Некорректная почта - невозможна смена пароля")
+            return False
         if self.password.text() == '':
             # generate password
             if self.config.value("ldap/passwordGenerator") == "apg" :
@@ -254,7 +261,7 @@ class mainWindow(QMainWindow):
             self.password.setText(newPass[0])
         else:
             if len(self.password.text())<3:
-                QMessageBox.information(self,"Некореектный пароль","Вы указали слишком короткий пароль")
+                QMessageBox.information(self,"Некорректный пароль","Вы указали слишком короткий пароль")
                 return False
         try:
             self.c.resetPassword(self.dn, self.password.text())
