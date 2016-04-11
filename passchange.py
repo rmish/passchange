@@ -240,7 +240,7 @@ class mainWindow(QMainWindow):
         return True
 
     def resetPassword(self):
-        if len(self.email.text) < 6 :
+        if len(self.email.text()) < 6 :
             print("Некорректная почта - невозможна смена пароля")
             return False
         if self.password.text() == '':
