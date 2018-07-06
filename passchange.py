@@ -11,6 +11,9 @@ from email.mime.text import MIMEText
 from socket import gethostbyaddr, gethostname
 
 class listDialog(QDialog):
+    """
+    Диалог для выбора ...
+    """
     def __init__(self, usersList, parent=None):
         super(listDialog, self).__init__(parent)
         self.users = usersList
